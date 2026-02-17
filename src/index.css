@@ -367,3 +367,27 @@ body {
   display: block;
   margin-top: 4px;
 }
+
+/* Returning Customer Styles */
+.checking-text {
+  font-size: 12px;
+  color: #80EF80;
+  margin-top: 4px;
+}
+
+.consent-group.returning {
+  text-align: center;
+  background: rgba(128, 239, 128, 0.1);
+  border-color: #80EF80;
+}
+
+.welcome-back {
+  font-size: 18px;
+  font-weight: 600;
+  color: #80EF80;
+  margin-bottom: 8px;
+}
+
+.consent-group.returning .consent-text {
+  color: #FAFAF9;
+}

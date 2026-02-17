@@ -12,6 +12,7 @@ function getBusinessSlug() {
 // Your Supabase Edge Function URL
 const SUPABASE_URL = 'https://bnytdgxgedktxlzyjbjp.supabase.co'
 const SUBMIT_URL = `${SUPABASE_URL}/functions/v1/intake-submit`
+const CHECK_CUSTOMER_URL = `${SUPABASE_URL}/functions/v1/check-customer`
 
 const GARMENT_TYPES = ['Pants', 'Shirt', 'Dress', 'Suit', 'Jacket', 'Skirt', 'Coat', 'Other']
 const SERVICE_TYPES = ['Hem', 'Taper', 'Repair', 'Shorten', 'Lengthen', 'Take In', 'Let Out', 'Zipper', 'Other']
@@ -23,6 +24,8 @@ export default function App() {
   const [submitting, setSubmitting] = useState(false)
   const [submitted, setSubmitted] = useState(false)
   const [error, setError] = useState('')
+  const [isReturningCustomer, setIsReturningCustomer] = useState(false)
+  const [checkingCustomer, setCheckingCustomer] = useState(false)
   
   const [form, setForm] = useState({
     first_name: '',
@@ -75,6 +78,38 @@ export default function App() {
     setError('')
   }
 
+  // Check if customer exists when phone number is entered
+  async function checkCustomer(phone) {
+    // Only check if phone has at least 10 digits
+    const digits = phone.replace(/\D/g, '')
+    if (digits.length < 10) {
+      setIsReturningCustomer(false)
+      return
+    }
+
+    setCheckingCustomer(true)
+    try {
+      const response = await fetch(CHECK_CUSTOMER_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          phone: phone,
+          business_slug: businessSlug
+        })
+      })
+      const data = await response.json()
+      setIsReturningCustomer(data.exists === true)
+    } catch (err) {
+      console.error('Error checking customer:', err)
+      setIsReturningCustomer(false)
+    }
+    setCheckingCustomer(false)
+  }
+
+  function handlePhoneBlur(e) {
+    checkCustomer(e.target.value)
+  }
+
   async function handleSubmit(e) {
     e.preventDefault()
     
@@ -94,8 +129,8 @@ export default function App() {
       return
     }
 
-    // Validate SMS consent selection
-    if (form.sms_consent === null) {
+    // Validate SMS consent selection (only for new customers)
+    if (!isReturningCustomer && form.sms_consent === null) {
       setError('Please select an SMS notification preference')
       return
     }
@@ -154,6 +189,7 @@ export default function App() {
     })
     setSubmitted(false)
     setError('')
+    setIsReturningCustomer(false)
   }
 
   // Loading state
@@ -261,7 +297,9 @@ export default function App() {
               placeholder="(555) 123-4567"
               value={form.phone}
               onChange={handleChange}
+              onBlur={handlePhoneBlur}
             />
+            {checkingCustomer && <p className="checking-text">Checking...</p>}
           </div>
 
           <div className="form-group">
@@ -347,38 +385,45 @@ export default function App() {
           </div>
 
           {/* SMS Consent */}
-          <div className="consent-group">
-            <p className="consent-header">SMS Notifications <span className="required">*</span></p>
-            <div className="consent-options">
-              <label className="consent-radio">
-                <input
-                  type="radio"
-                  name="sms_consent"
-                  value="yes"
-                  checked={form.sms_consent === true}
-                  onChange={() => setForm(prev => ({ ...prev, sms_consent: true }))}
-                />
-                <span className="consent-text">
-                  Yes, I would like to receive SMS notifications about my order status from JN Tailor & Alterations. 
-                  Message and data rates may apply. Message frequency varies. 
-                  Reply STOP to unsubscribe or HELP for help. 
-                  View our <a href="https://irisautomata.com/privacy-policy/" target="_blank" rel="noopener noreferrer">Privacy Policy</a> and <a href="https://irisautomata.com/terms-of-service/" target="_blank" rel="noopener noreferrer">Terms of Service</a>.
-                </span>
-              </label>
-              <label className="consent-radio">
-                <input
-                  type="radio"
-                  name="sms_consent"
-                  value="no"
-                  checked={form.sms_consent === false}
-                  onChange={() => setForm(prev => ({ ...prev, sms_consent: false }))}
-                />
-                <span className="consent-text">
-                  No, I do not wish to receive SMS notifications.
-                </span>
-              </label>
+          {isReturningCustomer ? (
+            <div className="consent-group returning">
+              <p className="welcome-back">Welcome back! 👋</p>
+              <p className="consent-text">We have your notification preferences on file.</p>
             </div>
-          </div>
+          ) : (
+            <div className="consent-group">
+              <p className="consent-header">SMS Notifications <span className="required">*</span></p>
+              <div className="consent-options">
+                <label className="consent-radio">
+                  <input
+                    type="radio"
+                    name="sms_consent"
+                    value="yes"
+                    checked={form.sms_consent === true}
+                    onChange={() => setForm(prev => ({ ...prev, sms_consent: true }))}
+                  />
+                  <span className="consent-text">
+                    Yes, I would like to receive SMS notifications about my order status from JN Tailor & Alterations. 
+                    Message and data rates may apply. Message frequency varies. 
+                    Reply STOP to unsubscribe or HELP for help. 
+                    View our <a href="https://irisautomata.com/privacy-policy/" target="_blank" rel="noopener noreferrer">Privacy Policy</a> and <a href="https://irisautomata.com/terms-of-service/" target="_blank" rel="noopener noreferrer">Terms of Service</a>.
+                  </span>
+                </label>
+                <label className="consent-radio">
+                  <input
+                    type="radio"
+                    name="sms_consent"
+                    value="no"
+                    checked={form.sms_consent === false}
+                    onChange={() => setForm(prev => ({ ...prev, sms_consent: false }))}
+                  />
+                  <span className="consent-text">
+                    No, I do not wish to receive SMS notifications.
+                  </span>
+                </label>
+              </div>
+            </div>
+          )}
 
           <button 
             type="submit" 
