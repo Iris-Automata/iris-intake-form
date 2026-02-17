@@ -295,6 +295,28 @@ body {
   font-weight: 400;
 }
 
+.consent-options {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.consent-radio {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  cursor: pointer;
+}
+
+.consent-radio input[type="radio"] {
+  width: 20px;
+  height: 20px;
+  margin-top: 2px;
+  accent-color: #80EF80;
+  cursor: pointer;
+  flex-shrink: 0;
+}
+
 .consent-checkbox {
   display: flex;
   align-items: flex-start;
@@ -337,11 +359,4 @@ body {
 
 .footer a:hover {
   text-decoration: underline;
-}
-
-.form-subtitle {
-  font-size: 18px;
-  font-weight: 500;
-  display: block;
-  margin-top: 4px;
 }

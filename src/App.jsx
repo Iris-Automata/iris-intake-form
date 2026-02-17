@@ -34,7 +34,7 @@ export default function App() {
     service_type: '',
     custom_service: '',
     order_details: '',
-    sms_consent: false
+    sms_consent: null
   })
 
   useEffect(() => {
@@ -94,6 +94,12 @@ export default function App() {
       return
     }
 
+    // Validate SMS consent selection
+    if (form.sms_consent === null) {
+      setError('Please select an SMS notification preference')
+      return
+    }
+
     setSubmitting(true)
     setError('')
 
@@ -144,7 +150,7 @@ export default function App() {
       service_type: '',
       custom_service: '',
       order_details: '',
-      sms_consent: false
+      sms_consent: null
     })
     setSubmitted(false)
     setError('')
@@ -205,8 +211,8 @@ export default function App() {
   return (
     <div className="container">
       <div className="header">
-      <h1 className="business-name">{businessName || 'JN Tailor & Alterations'}<br /><span className="form-subtitle">Order Intake Form</span></h1>
-        <p className="subtitle">Save time during your visit by completing this order intake form before coming into the shop.</p>
+        <h1 className="business-name">{businessName || 'JN Tailor & Alterations Order Intake Form'}</h1>
+        <p className="subtitle">Submit your alteration request</p>
       </div>
 
       <div className="form-card">
@@ -342,21 +348,36 @@ export default function App() {
 
           {/* SMS Consent */}
           <div className="consent-group">
-            <p className="consent-header">SMS Notifications <span className="optional">(optional)</span></p>
-            <label className="consent-checkbox">
-              <input
-                type="checkbox"
-                name="sms_consent"
-                checked={form.sms_consent}
-                onChange={(e) => setForm(prev => ({ ...prev, sms_consent: e.target.checked }))}
-              />
-              <span className="consent-text">
-                Yes, I would like to receive SMS notifications about my order status from JN Tailor & Alterations. 
-                Message and data rates may apply. Message frequency varies. 
-                Reply STOP to unsubscribe or HELP for help. 
-                View our <a href="https://irisautomata.com/privacy-policy/" target="_blank" rel="noopener noreferrer">Privacy Policy</a> and <a href="https://irisautomata.com/terms-of-service/" target="_blank" rel="noopener noreferrer">Terms of Service</a>.
-              </span>
-            </label>
+            <p className="consent-header">SMS Notifications <span className="required">*</span></p>
+            <div className="consent-options">
+              <label className="consent-radio">
+                <input
+                  type="radio"
+                  name="sms_consent"
+                  value="yes"
+                  checked={form.sms_consent === true}
+                  onChange={() => setForm(prev => ({ ...prev, sms_consent: true }))}
+                />
+                <span className="consent-text">
+                  Yes, I would like to receive SMS notifications about my order status from JN Tailor & Alterations. 
+                  Message and data rates may apply. Message frequency varies. 
+                  Reply STOP to unsubscribe or HELP for help. 
+                  View our <a href="https://irisautomata.com/privacy-policy/" target="_blank" rel="noopener noreferrer">Privacy Policy</a> and <a href="https://irisautomata.com/terms-of-service/" target="_blank" rel="noopener noreferrer">Terms of Service</a>.
+                </span>
+              </label>
+              <label className="consent-radio">
+                <input
+                  type="radio"
+                  name="sms_consent"
+                  value="no"
+                  checked={form.sms_consent === false}
+                  onChange={() => setForm(prev => ({ ...prev, sms_consent: false }))}
+                />
+                <span className="consent-text">
+                  No, I do not wish to receive SMS notifications.
+                </span>
+              </label>
+            </div>
           </div>
 
           <button 
