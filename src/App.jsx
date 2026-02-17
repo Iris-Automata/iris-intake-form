@@ -33,7 +33,8 @@ export default function App() {
     custom_garment: '',
     service_type: '',
     custom_service: '',
-    order_details: ''
+    order_details: '',
+    sms_consent: false
   })
 
   useEffect(() => {
@@ -112,7 +113,8 @@ export default function App() {
           email: form.email,
           garment_type: finalGarmentType,
           service_type: finalServiceType,
-          order_details: form.order_details
+          order_details: form.order_details,
+          sms_consent: form.sms_consent
         })
       })
 
@@ -141,7 +143,8 @@ export default function App() {
       custom_garment: '',
       service_type: '',
       custom_service: '',
-      order_details: ''
+      order_details: '',
+      sms_consent: false
     })
     setSubmitted(false)
     setError('')
@@ -335,6 +338,25 @@ export default function App() {
               value={form.order_details}
               onChange={handleChange}
             />
+          </div>
+
+          {/* SMS Consent */}
+          <div className="consent-group">
+            <p className="consent-header">SMS Notifications <span className="optional">(optional)</span></p>
+            <label className="consent-checkbox">
+              <input
+                type="checkbox"
+                name="sms_consent"
+                checked={form.sms_consent}
+                onChange={(e) => setForm(prev => ({ ...prev, sms_consent: e.target.checked }))}
+              />
+              <span className="consent-text">
+                Yes, I would like to receive SMS notifications about my order status from JN Tailor & Alterations. 
+                Message and data rates may apply. Message frequency varies. 
+                Reply STOP to unsubscribe or HELP for help. 
+                View our <a href="https://irisautomata.com/privacy-policy/" target="_blank" rel="noopener noreferrer">Privacy Policy</a> and <a href="https://irisautomata.com/terms-of-service/" target="_blank" rel="noopener noreferrer">Terms of Service</a>.
+              </span>
+            </label>
           </div>
 
           <button 

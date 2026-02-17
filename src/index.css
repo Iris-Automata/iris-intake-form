@@ -274,6 +274,54 @@ body {
   font-size: 14px;
 }
 
+/* SMS Consent */
+.consent-group {
+  margin: 20px 0;
+  padding: 16px;
+  background: rgba(48, 40, 83, 0.5);
+  border-radius: 8px;
+  border: 1px solid #302853;
+}
+
+.consent-header {
+  font-size: 14px;
+  font-weight: 500;
+  color: #FAFAF9;
+  margin-bottom: 12px;
+}
+
+.optional {
+  color: #C8C6D8;
+  font-weight: 400;
+}
+
+.consent-checkbox {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  cursor: pointer;
+}
+
+.consent-checkbox input[type="checkbox"] {
+  width: 20px;
+  height: 20px;
+  margin-top: 2px;
+  accent-color: #80EF80;
+  cursor: pointer;
+  flex-shrink: 0;
+}
+
+.consent-text {
+  font-size: 13px;
+  color: #C8C6D8;
+  line-height: 1.5;
+}
+
+.consent-text a {
+  color: #80EF80;
+  text-decoration: underline;
+}
+
 /* Footer */
 .footer {
   text-align: center;
