@@ -211,8 +211,8 @@ export default function App() {
   return (
     <div className="container">
       <div className="header">
-        <h1 className="business-name">{businessName || 'JN Tailor & Alterations Order Intake Form'}</h1>
-        <p className="subtitle">Submit your alteration request</p>
+      <h1 className="business-name">{businessName || 'JN Tailor & Alterations'}<br /><span className="form-subtitle">Order Intake Form</span></h1>
+        <p className="subtitle">Save time during your visit by completing this order intake form while you are in line or before coming into the shop.</p>
       </div>
 
       <div className="form-card">
