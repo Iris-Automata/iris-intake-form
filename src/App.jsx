@@ -227,11 +227,11 @@ export default function App() {
                 <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
               </svg>
             </div>
-            <h1 className="success-title">Order Submitted!</h1>
+            <h1 className="success-title">You're All Set!</h1>
             <p className="success-message">
-              Thank you! {businessName ? `${businessName} has` : 'The shop has'} received your order request and will review it shortly.
+              Thank you! {businessName ? `${businessName} has` : 'The shop has'} received your alteration request. Bring your garment to our shop and we’ll get your alteration started.
               <br /><br />
-              You'll be contacted when your order is ready.
+              Questions? Call us at (281) 395-4141
             </p>
             <button className="new-order-btn" onClick={resetForm}>
               Submit Another Order
